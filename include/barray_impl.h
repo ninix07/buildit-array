@@ -233,8 +233,10 @@ namespace barray
       {
         return m_array.constant_val;
       }
+
       else
       {
+        assert(current_device == m_array.current_storage && "Array storage and device storage don't match");
         if (current_device == DEVICE_HOST)
           return const_cast<builder::dyn_var<T *> &>(
               m_array.m_arr)[m_array.compute_flat_index(indices)];
