@@ -173,10 +173,10 @@ namespace barray
 
       // TODO 1: Initialize all elements of the array to value
 
-      for (builder::dyn_var<int> i = 0; i < total_size; i++)
-      {
-        m_arr[i] = value;
-      }
+      // for (builder::dyn_var<int> i = 0; i < total_size; i++)
+      // {
+      //   m_arr[i] = value;
+      // }
       // TODO 4: Optimize arrays initialized to constants
       is_constant = true;
       constant_val = value;
