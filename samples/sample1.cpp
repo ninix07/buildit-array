@@ -17,6 +17,8 @@ void test_program(builder::dyn_var<int *> arr1, int dim1, int dim2, int dim3)
   w = 1;
   z.to_device();
   w.to_device();
+  y.allocate_device();
+  
   // Compute Z + W and store it in Y
   barray::run_on_gpu([&]()
                      { y = z + w; });

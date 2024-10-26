@@ -9,8 +9,14 @@ void cross_product(builder::dyn_var<int*> arr1, builder::dyn_var<int*> arr2, bui
 	barray::barray<int> y(arr2, {N, O});
 	barray::barray<int> z(arr_out, {M, O});
 
+    // TODO 7 : 
+	x.to_device();
+	y.to_device();
+	z.allocate_device();
 	// Invoke the cross operator
-	z = 5 * cross(x, y);
+	barray::run_on_gpu( [&] () {
+	 z = 5 * cross(x, y);
+	});
 	
 }
 

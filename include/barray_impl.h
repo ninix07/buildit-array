@@ -95,6 +95,10 @@ namespace barray
       device_allocated = 1;
     }
 
+    void allocate_device(){
+        allocate_device(m_sizes);
+    }
+
     // Function to transfer the array to the GPU
     void to_device()
     {
@@ -103,6 +107,7 @@ namespace barray
         return;
       runtime::cuda_memcpy_to_device(m_device_arr, m_arr,
                                      (int)sizeof(T) * get_total_size());
+      current_storage = DEVICE_GPU;
     }
 
     // Function to transfer the array back to the HOST
@@ -112,6 +117,7 @@ namespace barray
         return;
       runtime::cuda_memcpy_to_host(m_arr, m_device_arr,
                                    (int)sizeof(T) * get_total_size());
+      current_storage = DEVICE_HOST;
     }
 
     // Delete the default implementations of the operators
@@ -149,6 +155,12 @@ namespace barray
     // Assignment operator overloads
     void operator=(const barray_expr<T> &rhs)
     {
+
+    if (current_device == DEVICE_GPU && !device_allocated )
+    {
+      assert(false && "need to allocate array on device");
+    }
+
       match_expr_sizes(m_sizes, rhs.get_expr_size());
       induce_loop_at({}, rhs);
       is_constant = false;
@@ -227,7 +239,7 @@ namespace barray
     get_value_at(std::vector<builder::dyn_var<int> *> indices) const
     {
       // TODO 6: Make sure the array is on the GPU if requested from GPU
-
+      
       // TODO 4.2: Optimize arrays initialized to constants
       if (m_array.is_constant)
       {
@@ -337,6 +349,10 @@ namespace barray
       int len = expr1.get_expr_size()[1];
 
       // TODO: Implement cross product operator
+
+      for(;i< len; i++){
+        sum+= expr1.get_value_at(indices1) * expr2.get_value_at(indices2);
+      }
 
       return sum;
     }
